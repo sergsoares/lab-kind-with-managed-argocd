@@ -93,8 +93,12 @@ resource "helm_release" "argocd" {
   }
 }
 
+
+
 resource "kubectl_manifest" "argoapp" {
-  override_namespace = "argo-cd"
+  depends_on = [helm_release.argocd]
+
+  override_namespace = "argocd"
   yaml_body = <<YAML
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -104,7 +108,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/sergsoares/lab-kind-with-managed-argocd
+    repoURL: https://github.com/sergsoares/lab-kind-with-managed-argocd.git
     targetRevision: HEAD
     path: applications/app-generator
   destination:
