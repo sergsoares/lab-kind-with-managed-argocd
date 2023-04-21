@@ -22,7 +22,7 @@ terraform {
 provider "kind" {}
 
 resource "kind_cluster" "default" {
-    name           = "test-cluster"
+    name           = "argocd-selfmanaged"
     wait_for_ready = true
 
   kind_config {
@@ -76,8 +76,8 @@ provider "helm" {
 }
 
 resource "helm_release" "argocd" {
-  name       = "argo-cd"
-  namespace  = "argo-cd"
+  name       = "argocd"
+  namespace  = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
   version    = "5.24.0"
@@ -99,17 +99,17 @@ resource "kubectl_manifest" "argoapp" {
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: addons
-  namespace: argo-cd
+  name: root
+  namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/sergsoares/lab-k0s-in-digital-ocean.git
+    repoURL: https://github.com/sergsoares/lab-kind-with-managed-argocd
     targetRevision: HEAD
-    path: addons
+    path: applications/app-generator
   destination:
     server: https://kubernetes.default.svc
-    namespace: argo-cd
+    namespace: argocd
   syncPolicy:
     automated: {}
     syncOptions:
