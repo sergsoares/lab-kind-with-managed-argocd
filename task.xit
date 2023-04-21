@@ -1,0 +1,4 @@
+Tasks
+[x] Create base template for kind in terraform
+[x] Create initial applications folder with root
+[ ] Configure app-generator to read folder and create apps dynamically
